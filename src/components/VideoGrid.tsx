@@ -1,3 +1,4 @@
+import React from 'react';
 import { TravelVideo } from "@/types/video";
 import { VideoCard } from "./VideoCard";
 

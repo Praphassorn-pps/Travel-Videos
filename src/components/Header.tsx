@@ -1,3 +1,4 @@
+import React from 'react';
 import { Compass, Search } from "lucide-react";
 
 export const Header = () => {

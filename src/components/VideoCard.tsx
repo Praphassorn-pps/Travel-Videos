@@ -1,3 +1,4 @@
+import React from 'react';
 import { VideoCardProps } from "@/types/video";
 import { Play, MapPin, Eye } from "lucide-react";
 

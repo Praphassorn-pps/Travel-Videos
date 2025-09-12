@@ -2,7 +2,7 @@ import { VideoModalProps } from "@/types/video";
 import { X, MapPin, Eye, Calendar } from "lucide-react";
 import { useEffect } from "react";
 
-export const VideoModal = ({ video, isOpen, onClose }: VideoModalProps) => {
+const VideoModal = ({ video, isOpen, onClose }: VideoModalProps) => {
   // Close modal on escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -87,3 +87,5 @@ export const VideoModal = ({ video, isOpen, onClose }: VideoModalProps) => {
     </div>
   );
 };
+
+export default VideoModal;
