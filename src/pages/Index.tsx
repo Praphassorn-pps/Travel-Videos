@@ -1,17 +1,26 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Header } from "@/components/Header";
 import { VideoGrid } from "@/components/VideoGrid";
-import { Suspense, lazy } from "react";
-const VideoModal = lazy(() => import("@/components/VideoModal"));
+import VideoModal from "@/components/VideoModal";
+import { SearchFilter } from "@/components/SearchFilter";
 import { mockTravelVideos } from "@/data/mockVideos";
-import { useTravelVideos } from "@/hooks/useTravelVideos";
 import { TravelVideo } from "@/types/video";
+import { useVideoFilter } from "@/hooks/useVideoFilter";
 
 const Index = () => {
   const [selectedVideo, setSelectedVideo] = useState<TravelVideo | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // Use custom hook for videos
-  const { videos, loading, error } = useTravelVideos();
+
+  // ใช้ useVideoFilter hook
+  const {
+    searchTerm,
+    selectedCategory,
+    categories,
+    filteredVideos,
+    setSearchTerm,
+    setSelectedCategory,
+    totalResults
+  } = useVideoFilter(mockTravelVideos);
 
   const handleVideoClick = (video: TravelVideo) => {
     setSelectedVideo(video);
@@ -41,45 +50,47 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Search and Filter Section */}
+      <section className="py-8 px-4 bg-background/50 backdrop-blur-sm border-y border-border/50">
+        <div className="container mx-auto">
+          <SearchFilter
+            searchTerm={searchTerm}
+            selectedCategory={selectedCategory}
+            onSearchChange={setSearchTerm}
+            onCategoryChange={setSelectedCategory}
+            categories={categories}
+            totalResults={totalResults}
+          />
+        </div>
+      </section>
+
       {/* Video Grid Section */}
       <section className="py-12 px-4">
         <div className="container mx-auto">
           <div className="mb-8">
-            <h3 className="text-2xl font-bold text-foreground mb-2">Featured Travel Videos</h3>
-            <p className="text-muted-foreground">Journey to the world's most spectacular destinations</p>
+            <h3 className="text-2xl font-bold text-foreground mb-2">
+              {searchTerm || selectedCategory ? 'Search Results' : 'Featured Travel Videos'}
+            </h3>
+            <p className="text-muted-foreground">
+              {searchTerm || selectedCategory 
+                ? `Showing ${totalResults} video${totalResults !== 1 ? 's' : ''} matching your criteria`
+                : 'Journey to the world\'s most spectacular destinations'
+              }
+            </p>
           </div>
-          {loading ? (
-            <div className="flex flex-col items-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mb-4" />
-              <span className="text-muted-foreground">Loading videos...</span>
-            </div>
-          ) : error ? (
-            <div className="flex flex-col items-center py-20">
-              <div className="bg-destructive rounded-full p-6 mb-4">
-                <svg className="w-12 h-12 text-destructive-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-destructive mb-2">Error loading videos</h3>
-              <p className="text-destructive-foreground max-w-md">{error}</p>
-            </div>
-          ) : (
-            <VideoGrid 
-              videos={videos} 
-              onVideoClick={handleVideoClick}
-            />
-          )}
+          <VideoGrid 
+            videos={filteredVideos} 
+            onVideoClick={handleVideoClick}
+          />
         </div>
       </section>
 
-      {/* Video Modal (Lazy Loaded) */}
-      <Suspense fallback={<div className="flex justify-center items-center py-10">Loading modal...</div>}>
-        <VideoModal 
-          video={selectedVideo}
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-        />
-      </Suspense>
+      {/* Video Modal */}
+      <VideoModal 
+        video={selectedVideo}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
     </div>
   );
 }

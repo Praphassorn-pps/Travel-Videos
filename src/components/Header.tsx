@@ -17,11 +17,13 @@ export const Header = () => {
             </div>
           </div>
 
-          {/* Search (placeholder for future) */}
-          <div className="hidden md:flex items-center gap-2 bg-muted rounded-lg px-3 py-2 text-sm text-muted-foreground">
-            <Search className="w-4 h-4" />
-            <span>Search destinations...</span>
-          </div>
+            {/* Navigation Actions */}
+            <div className="flex items-center gap-4">
+              <div className="hidden md:flex items-center gap-2 bg-muted/50 rounded-lg px-3 py-2 text-sm text-muted-foreground backdrop-blur-sm">
+                <Search className="w-4 h-4" />
+                <span>Search below to explore destinations</span>
+              </div>
+            </div>
         </div>
       </div>
     </header>
